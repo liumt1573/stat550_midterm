@@ -1,0 +1,39 @@
+---
+title: "EDA"
+author: "Mark Liu & Friends"
+date: "2026-02-12"
+output: github_document
+---
+
+### Loading in the dataset and some libraries
+```{r setup, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(lme4)
+library(nlme)
+library(MASS)
+library(here)
+
+dataset_org <- read.csv(here("original.csv")) #original dataset
+dataset_mod <- read.csv(here("wider.csv")) #dataset with emperical characteristic values
+```
+
+## Including Plots
+
+Do the trend plot, as per Lang's instruction
+
+```{r cars}
+summary(cars)
+```
+
+## Including more Plots
+
+Do some cross section plots, as per Lang's instruction
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+## Including even more Plots
+
+Do some side by side box plots, as per my own volition
