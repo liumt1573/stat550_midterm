@@ -15,7 +15,7 @@ library(MASS)
 library(here)
 
 dataset_org <- read.csv(here("original.csv")) #original dataset
-dataset_mod <- read.csv(here("wider.csv")) #dataset with emperical characteristic values
+dataset_mod <- read.csv(here("wider.csv")) #dataset with empirical characteristic values
 ```
 
 ## Including Plots
@@ -23,7 +23,14 @@ dataset_mod <- read.csv(here("wider.csv")) #dataset with emperical characteristi
 Do the trend plot, as per Lang's instruction
 
 ```{r cars}
-summary(cars)
+
+ggplot(depression_data, aes(x = month, y = DEP, group = ID, color = CU)) +
+geom_line() +
+geom_point() +
+labs(title = "OD trends", x = "Month", y = "Depression Score")
+
+
+
 ```
 
 ## Including more Plots
