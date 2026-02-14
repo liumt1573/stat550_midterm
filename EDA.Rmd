@@ -22,7 +22,7 @@ dataset_mod <- read.csv(here("wider.csv")) #dataset with empirical characteristi
 
 Do the trend plot, as per Lang's instruction
 
-```{r cars}
+```{r time series}
 
 #Plot is too crowded, filter out some observations for good measures
 
@@ -78,7 +78,7 @@ boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline=FALSE, xlab = "Cu c
 ## Including even more Plots
 
 Do some more side by side box plots, just for good measures
-```{r}
+```{r side by side}
 
 #maximum concentration
 
@@ -103,4 +103,16 @@ boxplot(as.integer(dataset_mod$lag_time) ~ dataset_mod$Cu, outline=FALSE, xlab =
 boxplot(as.integer(dataset_mod$lag_time) ~ dataset_mod$Mine, outline=FALSE, xlab = "Mine", ylab = "Lag Time", main = "Comparing Lag Time via Mine")
 
 boxplot(as.integer(dataset_mod$lag_time) ~ dataset_mod$Storage, outline=FALSE, xlab = "Storage", ylab = "Lag Time", main = "Comparing Lag Time via Storage")
+```
+
+
+```{r hist}
+
+
+hist(dataset_mod$Maximum_Concentration, main = "Histogram of Maximum Concentration", xlab = " Maximum Concentration (OD600)")
+
+hist(as.numeric(dataset_mod$lag_time),, main = "Histogram of Lag Time", xlab = "Lag Time (h)")
+
+hist(dataset_mod$mu_max, main = "Histogram of Mu Max",xlab = expression("Mu Max (" * h^{-1} * ")"),ylab = "Frequency")
+
 ```
