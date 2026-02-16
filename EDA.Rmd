@@ -22,7 +22,7 @@ dataset_mod <- read.csv(here("wider.csv")) #dataset with empirical characteristi
 
 Do the trend plot, as per Lang's instruction
 
-```{r time series}
+```{r time_trend}
 
 #Plot is too crowded, filter out some observations for good measures
 
@@ -50,7 +50,17 @@ dataset_plottable <- filter(dataset_org, ID > 300, ID < 650)
 ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Storage)) +
 geom_line() +
 geom_point() +
-labs(title = "OD trends, COlored by Storage Method", x = "Time", y = "Concentration")
+labs(title = "OD trends, Colored by Storage Method", x = "Time", y = "Concentration")
+
+
+#Comparing effect of media
+
+dataset_plottable <- filter(dataset_org, ID %in% seq(1, 2000, 10))
+ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Media)) +
+geom_line() +
+geom_point() +
+labs(title = "OD trends, Colored by Media", x = "Time", y = "Concentration")
+
 
 
 
@@ -61,7 +71,7 @@ labs(title = "OD trends, COlored by Storage Method", x = "Time", y = "Concentrat
 
 Do some cross section plots, as per Lang's instruction
 
-```{r pressure, echo=FALSE}
+```{r cross_sectional, echo=FALSE}
 #IDK, let's look at 0, 24, and 96?
 #Adding outliers make it difficult to compare
 
@@ -73,12 +83,13 @@ boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline=FALSE, xlab = "Cu c
 
 dataset_plottable <- filter(dataset_org, Time == 96)
 boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline=FALSE, xlab = "Cu concentration", ylab = "OD", main = "Time 96 OD")
+
 ```
 
 ## Including even more Plots
 
 Do some more side by side box plots, just for good measures
-```{r side by side}
+```{r box_plots}
 
 #maximum concentration
 
@@ -88,6 +99,10 @@ boxplot(dataset_mod$Maximum_Concentration ~ dataset_mod$Mine, outline=FALSE, xla
 
 boxplot(dataset_mod$Maximum_Concentration ~ dataset_mod$Storage, outline=FALSE, xlab = "Storage", ylab = "Maximum Concentration", main = "Comparing Maximum Concentration via Storage")
 
+boxplot(dataset_mod$Maximum_Concentration ~ dataset_mod$Storage, outline=FALSE, xlab = "Media", ylab = "Maximum Concentration", main = "Comparing Maximum Concentration via Media")
+
+
+
 #mu max
 
 boxplot(dataset_mod$mu_max ~ dataset_mod$Cu, outline=FALSE, xlab = "Cu concentration", ylab = "mu max", main = "Comparing Mu Max via Cu")
@@ -96,6 +111,8 @@ boxplot(dataset_mod$mu_max ~ dataset_mod$Mine, outline=FALSE, xlab = "Mine", yla
 
 boxplot(dataset_mod$mu_max ~ dataset_mod$Storage, outline=FALSE, xlab = "Storage", ylab = "Mu Max", main = "Comparing Mu Max via Storage")
 
+boxplot(dataset_mod$mu_max ~ dataset_mod$Media, outline=FALSE, xlab = "Media", ylab = "Mu Max", main = "Comparing Mu Max via Media")
+
 # lag time
 
 boxplot(as.integer(dataset_mod$lag_time) ~ dataset_mod$Cu, outline=FALSE, xlab = "Cu concentration", ylab = "Lag Time", main = "Comparing Lag Time via Cu")
@@ -103,6 +120,8 @@ boxplot(as.integer(dataset_mod$lag_time) ~ dataset_mod$Cu, outline=FALSE, xlab =
 boxplot(as.integer(dataset_mod$lag_time) ~ dataset_mod$Mine, outline=FALSE, xlab = "Mine", ylab = "Lag Time", main = "Comparing Lag Time via Mine")
 
 boxplot(as.integer(dataset_mod$lag_time) ~ dataset_mod$Storage, outline=FALSE, xlab = "Storage", ylab = "Lag Time", main = "Comparing Lag Time via Storage")
+
+boxplot(as.integer(dataset_mod$lag_time) ~ dataset_mod$Media, outline=FALSE, xlab = "Media", ylab = "Lag Time", main = "Comparing Lag Time via Media")
 ```
 
 
@@ -114,5 +133,8 @@ hist(dataset_mod$Maximum_Concentration, main = "Histogram of Maximum Concentrati
 hist(as.numeric(dataset_mod$lag_time),, main = "Histogram of Lag Time", xlab = "Lag Time (h)")
 
 hist(dataset_mod$mu_max, main = "Histogram of Mu Max",xlab = expression("Mu Max (" * h^{-1} * ")"),ylab = "Frequency")
+
+
+hist(dataset_mod$mu_max^0.1, main = "Histogram of power-transformed Mu Max",xlab = "Mu Max^0.1",ylab = "Frequency")
 
 ```
