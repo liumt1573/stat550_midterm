@@ -14,6 +14,27 @@ m1.fit1<- lme(OD ~ Time + I(Time^2) + Mine*Time + Storage*Time + Cu*Time
               + Mine*I(Time^2) + Storage*I(Time^2) + Cu*I(Time^2),
               random = ~Time + I(Time^2)|Primary_Key, data = dat1)
 # collinearity b/w Mine and Site so can't use both
+# try without Mine
+m1.fit2<- lme(OD ~ Time + I(Time^2) + Storage*Time + Cu*Time
+              + Storage*I(Time^2) + Cu*I(Time^2),
+              random = ~Time + I(Time^2)|Primary_Key, data = dat2)
+anova(m1.fit2,m1.fit1)
+
+# plot fitted vs actual
+set.seed(111) # randomly sample 8 
+toplot <- sample(unique(dat2$Primary_Key),8)
+par(mfrow = c(2,4))
+for(i in 1:length(toplot)) {
+  idx <- dat2$Primary_Key==toplot[i]
+  t <- dat2$Time[idx]
+  od <- dat2$OD[idx]
+  fit <- fitted(m1.fit1)[idx]
+  ii <- order(t,od,fit) # sort data by time before plotting
+  plotdata <- rbind(t,od,fit)[,ii]
+  # plot actual values
+  plot(plotdata[1,],plotdata[2,], xlab = 'Time',ylab = "OD",main = toplot[i])
+  lines(plotdata[1,],plotdata[3,]) # plot fitted values
+}
 
 
 
@@ -50,5 +71,3 @@ m2.fit_grow <- lm(mu_max^0.125 ~ Mine + Storage + Cu, data = wide2)
 # this transformation looks much worse if 0s are included
 plot(m2.fit_grow,which=1)
 plot(m2.fit_grow,which=2)
-
-# model 3 - NLME growth curve model
