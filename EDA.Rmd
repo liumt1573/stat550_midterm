@@ -26,40 +26,37 @@ Do the trend plot, as per Lang's instruction
 
 #Plot is too crowded, filter out some observations for good measures
 
-dataset_plottable <- filter(dataset_org, ID < 100 | ID > 1900)
+dataset_plottable <- filter(dataset_org, ID %in% seq(1, 2000, 10))
 
 #Comparing effect of copper
 
 ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Cu)) +
 geom_line() +
 geom_point() +
-labs(title = "OD trends", x = "Time", y = "Concentration")
+labs(title = "OD trends", x = "Time", y = "OD")
 
 
 #Comparing effect of mine
 
-dataset_plottable <- filter(dataset_org, ID < 1000, ID > 750)
 ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Mine)) +
 geom_line() +
 geom_point() +
-labs(title = "OD trends, Colored by Mine", x = "Time", y = "Concentration")
+labs(title = "OD trends, Colored by Mine", x = "Time", y = "OD")
 
 #Comparing effect of storage
 
-dataset_plottable <- filter(dataset_org, ID > 300, ID < 650)
 ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Storage)) +
 geom_line() +
 geom_point() +
-labs(title = "OD trends, Colored by Storage Method", x = "Time", y = "Concentration")
+labs(title = "OD trends, Colored by Storage Method", x = "Time", y = "OD")
 
 
 #Comparing effect of media
 
-dataset_plottable <- filter(dataset_org, ID %in% seq(1, 2000, 10))
 ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Media)) +
 geom_line() +
 geom_point() +
-labs(title = "OD trends, Colored by Media", x = "Time", y = "Concentration")
+labs(title = "OD trends, Colored by Media", x = "Time", y = "OD")
 
 
 
@@ -76,13 +73,16 @@ Do some cross section plots, as per Lang's instruction
 #Adding outliers make it difficult to compare
 
 dataset_plottable <- filter(dataset_org, Time == 0)
-boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline=FALSE, xlab = "Cu concentration", ylab = "OD", main = "Time 0 OD")
+boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline = FALSE, xlab = "Cu concentration", ylab = "OD", main = "Time 0 OD")
 
 dataset_plottable <- filter(dataset_org, Time == 24)
-boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline=FALSE, xlab = "Cu concentration", ylab = "OD", main = "Time 24 OD")
+boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline=TRUE, xlab = "Cu concentration", ylab = "OD", main = "Time 24 OD")
+
+dataset_plottable <- filter(dataset_org, Time == 72)
+boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline=TRUE, xlab = "Cu concentration", ylab = "OD", main = "Time 72 OD")
 
 dataset_plottable <- filter(dataset_org, Time == 96)
-boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline=FALSE, xlab = "Cu concentration", ylab = "OD", main = "Time 96 OD")
+boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline=TRUE, xlab = "Cu concentration", ylab = "OD", main = "Time 96 OD")
 
 ```
 
@@ -136,5 +136,7 @@ hist(dataset_mod$mu_max, main = "Histogram of Mu Max",xlab = expression("Mu Max 
 
 
 hist(dataset_mod$mu_max^0.1, main = "Histogram of power-transformed Mu Max",xlab = "Mu Max^0.1",ylab = "Frequency")
+
+hist(dataset_mod$Maximum_Concentration^0.1, main = "Histogram of power-transformed Maximum Concentration",xlab = "Maximum_Concentration^0.1",ylab = "Frequency")
 
 ```

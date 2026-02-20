@@ -1,8 +1,9 @@
 # 550 midterm project - model fitting
 library(nlme)
 library(MASS)
+library(here)
 
-dat1 <- read.table('/Users/nickson/Downloads/All data - Original.csv',
+dat1 <- read.table(here("original.csv"),
                    header=TRUE,sep = ",")
 dat1$Mine <- factor(dat1$Mine)
 dat1$Site <- factor(dat1$Site)
@@ -39,7 +40,7 @@ for(i in 1:length(toplot)) {
 
 
 # model 2 - linear model fitting variables
-wide1 <- read.table("/Users/nickson/Downloads/wider.csv",
+wide1 <- read.table(here("wider.csv"),
                     header=TRUE, sep = ",", fill = TRUE)
 wide1$Mine <- factor(wide1$Mine)
 wide1$Site <- factor(wide1$Site)
