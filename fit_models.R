@@ -102,8 +102,7 @@ for(i in 1:2){
 }
 
 # model 2 - linear model fitting variables
-wide1 <- read.table("/Users/nickson/Downloads/wider.csv",
-                    header=TRUE, sep = ",", fill = TRUE)
+wide1 <- read.table(here("wider.csv"),header=TRUE, sep = ",", fill = TRUE)
 wide1$Mine <- factor(wide1$Mine)
 wide1$Site <- factor(wide1$Site)
 wide1$Storage <- factor(wide1$Storage)
