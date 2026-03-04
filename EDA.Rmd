@@ -6,6 +6,7 @@ output: github_document
 ---
 
 ### Loading in the dataset and some libraries
+
 ```{r setup, include=FALSE}
 library(dplyr)
 library(ggplot2)
@@ -36,31 +37,87 @@ geom_point() +
 labs(title = "OD trends", x = "Time", y = "OD")
 
 
+```
+```{r some more plots}
+
 #Comparing effect of mine
 
 ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Mine)) +
-geom_line() +
-geom_point() +
-labs(title = "OD trends, Colored by Mine", x = "Time", y = "OD")
+  geom_line() +
+  geom_point() +
+  labs(title = "Select OD trends, Colored by Mine",
+       x = "Time",
+       y = "OD") +
+  facet_wrap(~ Mine)
 
 #Comparing effect of storage
 
 ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Storage)) +
-geom_line() +
-geom_point() +
-labs(title = "OD trends, Colored by Storage Method", x = "Time", y = "OD")
+  geom_line() +
+  geom_point() +
+  labs(title = "Select OD trends, Colored by Storage",
+       x = "Time",
+       y = "OD") +
+  facet_wrap(~ Storage)
 
 
 #Comparing effect of media
 
-ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Media)) +
-geom_line() +
-geom_point() +
-labs(title = "OD trends, Colored by Media", x = "Time", y = "OD")
+ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Media_Name)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Select OD trends, Colored by Type of Media",
+       x = "Time",
+       y = "OD") +
+  facet_wrap(~ Media_Name)
 
 
+ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Dilution)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Select OD trends, Colored by Media Dilution",
+       x = "Time",
+       y = "OD") +
+  facet_wrap(~ Dilution)
 
 
+```
+
+
+```{r suffering}
+
+#
+
+ggplot(dataset_plottable, aes(x = Time, y = OD, group = ID, color = Cu)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Select OD trends, Colored by Copper Concentration",
+       x = "Time",
+       y = "OD") +
+  facet_wrap(~ Cu)
+
+summary_data <- filter(dataset_org, Dilution == "1") %>%
+  group_by(Cu, Time) %>%
+  summarise(
+    median_OD = median(OD, na.rm = TRUE),
+    p25 = quantile(OD, 0.25, na.rm = TRUE),
+    p75 = quantile(OD, 0.75, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+ggplot(summary_data,
+       aes(x = Time,
+           y = median_OD,
+           color = Cu,
+           fill = Cu,
+           group = Cu)) +
+  geom_ribbon(aes(ymin = p25, ymax = p75),
+              alpha = 0.2,
+              color = NA) +
+  geom_line(linewidth = 1) +
+  labs(title = "Median OD with IQR",
+       x = "Time",
+       y = "OD")
 
 ```
 
@@ -89,6 +146,7 @@ boxplot(dataset_plottable$OD ~ dataset_plottable$Cu, outline=TRUE, xlab = "Cu co
 ## Including even more Plots
 
 Do some more side by side box plots, just for good measures
+
 ```{r box_plots}
 
 #maximum concentration
@@ -124,19 +182,24 @@ boxplot(as.integer(dataset_mod$lag_time) ~ dataset_mod$Storage, outline=FALSE, x
 boxplot(as.integer(dataset_mod$lag_time) ~ dataset_mod$Media, outline=FALSE, xlab = "Media", ylab = "Lag Time", main = "Comparing Lag Time via Media")
 ```
 
-
 ```{r hist}
-
+par(mfrow = c(3,2), 
+    mar = c(3,3,1,1))
 
 hist(dataset_mod$Maximum_Concentration, main = "Histogram of Maximum Concentration", xlab = " Maximum Concentration (OD600)")
 
-hist(as.numeric(dataset_mod$lag_time),, main = "Histogram of Lag Time", xlab = "Lag Time (h)")
+hist(dataset_mod$Maximum_Concentration^0.1, main = "Histogram of Maximum Concentration^0.1",xlab = "Maximum_Concentration^0.1",ylab = "Frequency")
+
+
+hist(as.numeric(dataset_mod$lag_time),, main = "Histogram of Lag Time", xlab = "Lag Time")
+
+hist(as.numeric(dataset_mod$lag_time)^0.3, main = "Histogram of Lag Time^0.3",xlab = "lag_time^0.3",ylab = "Frequency")
 
 hist(dataset_mod$mu_max, main = "Histogram of Mu Max",xlab = expression("Mu Max (" * h^{-1} * ")"),ylab = "Frequency")
 
 
-hist(dataset_mod$mu_max^0.1, main = "Histogram of power-transformed Mu Max",xlab = "Mu Max^0.1",ylab = "Frequency")
+hist(dataset_mod$mu_max^0.1, main = "Histogram of Mu Max^0.1",xlab = "Mu Max^0.1",ylab = "Frequency")
 
-hist(dataset_mod$Maximum_Concentration^0.1, main = "Histogram of power-transformed Maximum Concentration",xlab = "Maximum_Concentration^0.1",ylab = "Frequency")
+
 
 ```
