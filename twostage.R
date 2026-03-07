@@ -9,6 +9,7 @@ dat1 <- read.csv("original.csv")
 dat1$Mine        <- factor(dat1$Mine)
 dat1$Storage     <- factor(dat1$Storage)
 dat1$Media       <- factor(dat1$Media)
+dat1$Dilution    <- factor(dat1$Dilution)
 dat1$Primary_Key <- factor(dat1$Primary_Key)
 dat1$Cu          <- as.numeric(as.character(dat1$Cu))
 
@@ -45,14 +46,14 @@ covariates <- dat1 %>%
   group_by(Primary_Key) %>%
   slice(1) %>%
   ungroup() %>%
-  dplyr::select(Primary_Key, Mine, Storage, Media, Cu)
+  dplyr::select(Primary_Key, Mine, Storage, Media, Cu, Dilution) 
 
 # ── 4. Part 1 — Binary logistic regression (all curves) ──────────────────────
 binary_data <- curve_stats %>%
   left_join(covariates, by = "Primary_Key") %>%
   mutate(grew = as.integer(grew_data))
 
-growth_model <- glm(grew ~ Mine + Storage + Cu,
+growth_model <- glm(grew ~ Mine + Storage + Cu + Media * Dilution,
                     data   = binary_data,
                     family = binomial)
 summary(growth_model)
@@ -76,7 +77,7 @@ conf_mat <- table(predicted = predicted_class, actual = binary_data$grew)
 print(conf_mat)
 cat("Accuracy:", round(sum(diag(conf_mat)) / sum(conf_mat), 3), "\n")
 
-# Plot predicted probability of growth
+# Plot predicted probability of growth - DOES NOT WORK W/ Media, Dilution MODEL
 pred_data <- expand.grid(
   Cu      = seq(0, 1200, by = 10),
   Mine    = levels(binary_data$Mine),
